@@ -1,96 +1,87 @@
 import type { Usuario, Rol } from "../models/interfaces";
 
-
 export class CRMController {
-    // Propiedades
-    private usuarioDelCentro: Usuario[] = [];
-    private readonly CLAVE_STORAGE = "school-crm-usuarios"; // Constante privada, no se puede cambiar; 
+  // Propiedades
+  private usuariosDelCentro: Usuario[] = [];
+  private readonly CLAVE_STORAGE = "school-crm-usuarios"; // Constante privada, no se puede cambiar desde fuera de la clase
 
-    //Constructor
-    constructor(private version: string) {
-        const datosLocales = localStorage.getItem(this.CLAVE_STORAGE);
-        if (datosLocales) {
-            this.usuarioDelCentro = JSON.parse(datosLocales);
-        } else {
-        this.usuarioDelCentro = [
-            {
-                id: 1,
-                nombre: "Juan Pérez",
-                rol: "profesor",
-                activo: true,
-            },
-            {
-                id: 2,
-                nombre: "María López",
-                rol: "alumno",
-                activo: true,
-            },
-            {
-                id: 3,
-                nombre: "Carlos García",
-                rol: "administrador",
-                activo: true,
-            },
-            {
-                id: 4,
-                nombre: "Ana Torres",
-                rol: "profesor",
-                activo: false,
-            },
-            {
-                id: 5,
-                nombre: "Luis Fernández",
-                rol: "alumno",
-                activo: false,
-            },
-            {
-                id: 6,
-                nombre: "Elena Martínez",
-                rol: "administrador",
-                activo: false,
-            },
-        ];
-    } 
-    }
-
-
-    // Métodos: Funcione de ayer qeu estaba en counter.ts, ahora en la clase CrmController convertida en un método de la clase.
-    filtrarUsuariosPorRol(rolBuscado: Rol): Usuario[] {
-        //Usamos this para refenciar la propiedad usuarioDelCentro en esta misma clase.
-        return this.usuarioDelCentro.filter(
-            (usuario) => usuario.rol === rolBuscado,
-        );
-    }
-
-    actualizaVersion(nuevaVersion: string): void {
-        this.version = nuevaVersion;
-    }
-    verVersion(): string {
-        return this.version;
-    }
-
-   public agregarUsuario(nuevoUsuario: Usuario): void {
-    if (!this.usuarioDelCentro.some((usuario) => usuario.id === nuevoUsuario.id)) {
-        this.usuarioDelCentro.push(nuevoUsuario);
-
-        console.log(
-            "Usuario agregado:",
-            nuevoUsuario,
-            "Resultado:",
-            this.usuarioDelCentro
-        );
-
-        this.guardarEnDisco();
+  // Constructor se ejecuta al nacer el objeto
+  constructor(private version: string) {
+    // Inicializamo el array de usuarios si no existe en localStorage
+    const datosLocales = localStorage.getItem(this.CLAVE_STORAGE);
+    if (datosLocales) {
+      this.usuariosDelCentro = JSON.parse(datosLocales);
     } else {
-        console.log(
-            "Usuario no agregado: el id ya existe.",
-            "Resultado:",
-            this.usuarioDelCentro
+      this.usuariosDelCentro = [
+        { id: 1, nombre: "Juan Pérez", rol: "admin", activo: true },
+        { id: 2, nombre: "María López", rol: "profesor", activo: true },
+        { id: 3, nombre: "Carlos García", rol: "alumno", activo: true },
+      ]; // Inicializamos el array vacío si no hay datos en localStorage
+      // Me falta guardar la lista en localStorage
+      this.guardarEnDisco();
+    }
+  }
+
+  public registrarUsuarioAsync(nuevoUsuario: Usuario): Promise<boolean> {
+    return new Promise((resolve) => {
+      console.log(
+        `[NETWORK]: Conectando con el servidor escolar para registrar a ${nuevoUsuario.id}...`,
+      );
+
+      // Simulamos un retraso de red de 2 segundos (2000 milisegundos)
+      setTimeout(() => {
+        // 1. Validamos si el ID ya existe en nuestro array privado
+        const idDuplicado = this.usuariosDelCentro.some(
+          (user) => user.id === nuevoUsuario.id,
         );
-    }
-}
-    private guardarEnDisco(): void {
-        // Guardamos en disco el array de usuarios del centro;
-        localStorage.setItem(this.CLAVE_STORAGE, JSON.stringify(this.usuarioDelCentro));
-    }
+
+        if (idDuplicado) {
+          console.error(
+            `❌ Error: El usuario con ID [${nuevoUsuario.id}] ya existe en el SchoolCRM.`,
+          );
+          return; // Cortamos la ejecución para no añadirlo
+        }
+
+        this.usuariosDelCentro.push(nuevoUsuario);
+        this.guardarEnDisco();
+        // La operación ha terminado con éxito: resolvemos la promesa
+        resolve(true);
+      }, 2000);
+    });
+  }
+
+  public leerTodosAsync(): Promise<Usuario[]> {
+    // Este método devuelve el listado completo de usuarios con un retardo de 2 segundos
+    return new Promise((resolve) => {
+      console.log(
+        "[NETWORK]: Conectando con el servidor escolar para leer los usuarios...",
+      );
+      setTimeout(() => {
+        resolve(this.usuariosDelCentro);
+      }, 2000);
+    });
+  }
+
+  // Métodos: La función de ayer, que estaba en counter, convertida en un método o habilidad de la clase
+  filtrarUsuariosPorRol(rolBuscado: Rol): Usuario[] {
+    // Usamos this para referirnos a la propiedad de esta misma clase
+    return this.usuariosDelCentro.filter(
+      (usuario) => usuario.rol === rolBuscado,
+    );
+  }
+
+  actualizaVersion(nuevaVersion: string): void {
+    this.version = nuevaVersion;
+  }
+
+  verVersion(): string {
+    return this.version;
+  }
+
+  guardarEnDisco() {
+    localStorage.setItem(
+      this.CLAVE_STORAGE,
+      JSON.stringify(this.usuariosDelCentro),
+    );
+  }
 }
