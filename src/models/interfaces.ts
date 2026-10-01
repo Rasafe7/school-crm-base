@@ -50,3 +50,4 @@ export interface Sancion {
     tipo: TipoSancion;
     descripcion: string;
 }
+  

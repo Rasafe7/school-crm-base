@@ -15,7 +15,7 @@ export class CRMController {
         // y añadir el registro usando el servicio de almacenamiento.
         throw new Error('Método no implementado');
     }
-  }
+  
 
     /**
      * Registra una sanción disciplinaria.
@@ -42,6 +42,6 @@ export class CRMController {
         // TODO: Filtrar asistencias y sanciones del alumno para devolver el objeto con los contadores.
         throw new Error('Método no implementado');
     }
-}
 
+}
 
