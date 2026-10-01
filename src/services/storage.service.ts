@@ -12,7 +12,7 @@ export class StorageService<T> {
     // Recupera todos los elementos del almacén
     public getAll(): T[] {
         const data = localStorage.getItem(this.key);
-        return data ? JSON.parse(data) : [];
+        return data ? JSON.parse(data) as T[] : [];
     }
 
     // Guarda una lista completa de elementos
