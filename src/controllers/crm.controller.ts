@@ -1,4 +1,4 @@
-import type { Asistencia, Sancion, RegistroHorario, EstadoAsistencia, TipoSancion } from '../models/interfaces';
+import type { Asistencia, Sancion, RegistroHorario,FranjaHoraria, EstadoAsistencia, TipoSancion } from '../models/interfaces';
 import { StorageService } from '../services/storage.service';
 
 export class CRMController {
@@ -10,7 +10,7 @@ export class CRMController {
     /**
      * Registra una falta, retraso o asistencia en el sistema de forma asíncrona.
      */
-    public async registrarAsistencia(alumnoId: string, profesorId: string, franja: string, estado: EstadoAsistencia): Promise<boolean> {
+    public async registrarAsistencia(alumnoId: string, profesorId: string, franja: FranjaHoraria, estado: EstadoAsistencia): Promise<boolean> {
         await new Promise<void>((resolve) => {
             setTimeout(resolve, 500);
         });
