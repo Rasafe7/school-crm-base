@@ -15,6 +15,7 @@ export class CRMController {
         // y añadir el registro usando el servicio de almacenamiento.
         throw new Error('Método no implementado');
     }
+  }
 
     /**
      * Registra una sanción disciplinaria.
