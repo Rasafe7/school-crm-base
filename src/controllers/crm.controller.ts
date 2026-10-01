@@ -1,96 +1,46 @@
-import type { Usuario, Rol } from "../models/interfaces";
-
+import type { Asistencia, Sancion, RegistroHorario, EstadoAsistencia, TipoSancion } from '../models/interfaces';
+import { StorageService } from '../services/storage.service';
 
 export class CRMController {
-    // Propiedades
-    private usuarioDelCentro: Usuario[] = [];
-    private readonly CLAVE_STORAGE = "school-crm-usuarios"; // Constante privada, no se puede cambiar; 
+    // Inicialización de los almacenes persistentes
+    private asistenciaStorage = new StorageService<Asistencia>('crm_asistencias');
+    private sancionesStorage = new StorageService<Sancion>('crm_sanciones');
+    private horariosStorage = new StorageService<RegistroHorario>('crm_horarios');
 
-    //Constructor
-    constructor(private version: string) {
-        const datosLocales = localStorage.getItem(this.CLAVE_STORAGE);
-        if (datosLocales) {
-            this.usuarioDelCentro = JSON.parse(datosLocales);
-        } else {
-        this.usuarioDelCentro = [
-            {
-                id: 1,
-                nombre: "Juan Pérez",
-                rol: "profesor",
-                activo: true,
-            },
-            {
-                id: 2,
-                nombre: "María López",
-                rol: "alumno",
-                activo: true,
-            },
-            {
-                id: 3,
-                nombre: "Carlos García",
-                rol: "administrador",
-                activo: true,
-            },
-            {
-                id: 4,
-                nombre: "Ana Torres",
-                rol: "profesor",
-                activo: false,
-            },
-            {
-                id: 5,
-                nombre: "Luis Fernández",
-                rol: "alumno",
-                activo: false,
-            },
-            {
-                id: 6,
-                nombre: "Elena Martínez",
-                rol: "administrador",
-                activo: false,
-            },
-        ];
-    } 
+    /**
+     * Registra una falta, retraso o asistencia en el sistema de forma asíncrona.
+     */
+    public async registrarAsistencia(alumnoId: string, profesorId: string, franja: string, estado: EstadoAsistencia): Promise<boolean> {
+        // TODO: El alumno debe implementar la simulación de retraso de red (setTimeout con Promise)
+        // y añadir el registro usando el servicio de almacenamiento.
+        throw new Error('Método no implementado');
     }
 
-
-    // Métodos: Funcione de ayer qeu estaba en counter.ts, ahora en la clase CrmController convertida en un método de la clase.
-    filtrarUsuariosPorRol(rolBuscado: Rol): Usuario[] {
-        //Usamos this para refenciar la propiedad usuarioDelCentro en esta misma clase.
-        return this.usuarioDelCentro.filter(
-            (usuario) => usuario.rol === rolBuscado,
-        );
+    /**
+     * Registra una sanción disciplinaria.
+     */
+    public async registrarSancion(alumnoId: string, profesorId: string, tipo: TipoSancion, descripcion: string): Promise<void> {
+        // TODO: Implementar lógica de inserción asíncrona.
+        throw new Error('Método no implementado');
     }
 
-    actualizaVersion(nuevaVersion: string): void {
-        this.version = nuevaVersion;
+    /**
+     * VERIFICACIÓN CRÍTICA: Comprueba si un profesor ya tiene una clase asignada en el mismo día y hora.
+     * Devuelve true si hay conflicto (el profesor está duplicado) o false si está libre.
+     */
+    public async comprobarConflictoProfesor(profesorId: string, dia: string, franja: string): Promise<boolean> {
+        // TODO: Recuperar los horarios y utilizar métodos de array (.some, .filter, etc.) 
+        // para buscar coincidencias exactas.
+        throw new Error('Método no implementado');
     }
-    verVersion(): string {
-        return this.version;
-    }
 
-   public agregarUsuario(nuevoUsuario: Usuario): void {
-    if (!this.usuarioDelCentro.some((usuario) => usuario.id === nuevoUsuario.id)) {
-        this.usuarioDelCentro.push(nuevoUsuario);
-
-        console.log(
-            "Usuario agregado:",
-            nuevoUsuario,
-            "Resultado:",
-            this.usuarioDelCentro
-        );
-
-        this.guardarEnDisco();
-    } else {
-        console.log(
-            "Usuario no agregado: el id ya existe.",
-            "Resultado:",
-            this.usuarioDelCentro
-        );
+    /**
+     * Genera un informe resumido con el total de faltas y retrasos de un alumno concreto.
+     */
+    public async obtenerInformeAlumno(alumnoId: string): Promise<{ faltas: number; retrasos: number; sanciones: number }> {
+        // TODO: Filtrar asistencias y sanciones del alumno para devolver el objeto con los contadores.
+        throw new Error('Método no implementado');
     }
 }
-    private guardarEnDisco(): void {
-        // Guardamos en disco el array de usuarios del centro;
-        localStorage.setItem(this.CLAVE_STORAGE, JSON.stringify(this.usuarioDelCentro));
-    }
-}
+
+

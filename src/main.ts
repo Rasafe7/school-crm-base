@@ -1,29 +1,21 @@
-import {CRMController} from "./controllers/crm.controller";
-import type { Usuario } from "./models/interfaces";
-//Instanciamos la clase CRMController
-const miEscuelaCRM = new CRMController("1.0.0");
+import { CRMController } from './controllers/crm.controller';
 
-  const nuevoUsuario: Usuario = {
-	id: 7,
-	nombre: "Laura Sánchez",
-	rol: "alumno",
-	activo: true,
-}; 
+const crm = new CRMController();
 
-miEscuelaCRM.agregarUsuario(nuevoUsuario); 
+async function ejecutarPrueba() {
+    console.log("=== Iniciando simulación de SchoolCRM ===");
+    
+    try {
+        // Aquí el alumno añadirá llamadas de prueba para demostrar 
+        // que sus métodos asíncronos y validaciones funcionan por consola.
+        
+        // Ejemplo de flujo esperado:
+        // const conflicto = await crm.comprobarConflictoProfesor('prof1', 'Lunes', '1ª Hora');
+        // console.log(`¿Hay conflicto horario?: ${conflicto}`);
+        
+    } catch (error) {
+        console.error("Error en la ejecución:", error);
+    }
+}
 
-//Usamos sus métodos.
-const profesores = miEscuelaCRM.filtrarUsuariosPorRol("profesor");
-
-console.log("Profesores del centro: ", profesores);
-
-/* console.log(miEscuelaCRM); */
-
-console.log("Versión actual del CRM: ", miEscuelaCRM.verVersion());
-
-
-
-
-
-
-
+ejecutarPrueba();
