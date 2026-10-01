@@ -11,15 +11,28 @@ export class CRMController {
      * Registra una falta, retraso o asistencia en el sistema de forma asíncrona.
      */
     public async registrarAsistencia(alumnoId: string, profesorId: string, franja: string, estado: EstadoAsistencia): Promise<boolean> {
-        // TODO: El alumno debe implementar la simulación de retraso de red (setTimeout con Promise)
-        // y añadir el registro usando el servicio de almacenamiento.
-        
         await new Promise<void>((resolve) => {
             setTimeout(resolve, 500);
         });
+        // Generamos un identificador único
         const id = crypto.randomUUID();
+        // Obtenemos la fecha actual en formato YYYY-MM-DD
+        const fecha = new Date().toISOString().split('T')[0];
+        // Creamos el registro de asistencia
+        const asistencia: Asistencia = {
+            id,
+            alumnoId,
+            profesorId,
+            fecha,
+            franja,
+            estado
+        };
+        // Guardamos la asistencia en LocalStorage
+        this.asistenciaStorage.add(asistencia);
+        // Indicamos se ha realizado correctamente
+        return true;
     }
-  
+
 
     /**
      * Registra una sanción disciplinaria.
