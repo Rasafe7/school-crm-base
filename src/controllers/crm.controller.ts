@@ -1,4 +1,4 @@
-import type { Asistencia, Sancion, RegistroHorario, EstadoAsistencia, TipoSancion } from '../models/interfaces';
+import type { Asistencia, Sancion, RegistroHorario,FranjaHoraria, EstadoAsistencia, TipoSancion } from '../models/interfaces';
 import { StorageService } from '../services/storage.service';
 
 export class CRMController {
@@ -10,21 +10,55 @@ export class CRMController {
     /**
      * Registra una falta, retraso o asistencia en el sistema de forma asíncrona.
      */
-    public async registrarAsistencia(alumnoId: string, profesorId: string, franja: string, estado: EstadoAsistencia): Promise<boolean> {
-        // TODO: El alumno debe implementar la simulación de retraso de red (setTimeout con Promise)
-        // y añadir el registro usando el servicio de almacenamiento.
-        throw new Error('Método no implementado');
+    public async registrarAsistencia(alumnoId: string, profesorId: string, franja: FranjaHoraria, estado: EstadoAsistencia): Promise<boolean> {
+        await new Promise<void>((resolve) => {
+            setTimeout(resolve, 500);
+        });
+        // Generamos un identificador único
+        const id = crypto.randomUUID();
+        // Obtenemos la fecha actual en formato YYYY-MM-DD
+        const fecha = new Date().toISOString().split('T')[0];
+        // Creamos el registro de asistencia
+        const asistencia: Asistencia = {
+            id,
+            alumnoId,
+            profesorId,
+            fecha,
+            franja,
+            estado
+        };
+        // Guardamos la asistencia en LocalStorage
+        this.asistenciaStorage.add(asistencia);
+        // Indicamos se ha realizado correctamente
+        return true;
     }
-  }
+
 
     /**
      * Registra una sanción disciplinaria.
      */
-    public async registrarSancion(alumnoId: string, profesorId: string, tipo: TipoSancion, descripcion: string): Promise<void> {
-        // TODO: Implementar lógica de inserción asíncrona.
-        throw new Error('Método no implementado');
-    }
+    public async registrarSancion( alumnoId: string,profesorId: string,tipo: TipoSancion,descripcion: string): Promise<void> {
+    // Simulamos un retraso de red de 500 ms
+        await new Promise<void>((resolve) => {
+        setTimeout(resolve, 500);
+        });
 
+        // Generamos un identificador único
+         const id = crypto.randomUUID();
+        // Obteemos la fecha actual en formato YYYY-MM-DD
+        const fecha = new Date().toISOString().split('T')[0];
+        // Creamos el registor de sanción
+        const sancion: Sancion = {
+            id,
+            alumnoId,
+            profesorId,
+            fecha,
+            tipo,
+            descripcion
+         };
+        // Guardamos la sanción en LocalStorage
+        this.sancionesStorage.add(sancion);
+    }
     /**
      * VERIFICACIÓN CRÍTICA: Comprueba si un profesor ya tiene una clase asignada en el mismo día y hora.
      * Devuelve true si hay conflicto (el profesor está duplicado) o false si está libre.
@@ -42,6 +76,6 @@ export class CRMController {
         // TODO: Filtrar asistencias y sanciones del alumno para devolver el objeto con los contadores.
         throw new Error('Método no implementado');
     }
-}
 
+}
 
