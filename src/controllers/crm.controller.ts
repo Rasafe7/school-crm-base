@@ -13,7 +13,11 @@ export class CRMController {
     public async registrarAsistencia(alumnoId: string, profesorId: string, franja: string, estado: EstadoAsistencia): Promise<boolean> {
         // TODO: El alumno debe implementar la simulación de retraso de red (setTimeout con Promise)
         // y añadir el registro usando el servicio de almacenamiento.
-        throw new Error('Método no implementado');
+        
+        await new Promise<void>((resolve) => {
+            setTimeout(resolve, 500);
+        });
+        const id = crypto.randomUUID();
     }
   
 
