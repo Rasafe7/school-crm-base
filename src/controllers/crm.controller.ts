@@ -37,11 +37,28 @@ export class CRMController {
     /**
      * Registra una sanción disciplinaria.
      */
-    public async registrarSancion(alumnoId: string, profesorId: string, tipo: TipoSancion, descripcion: string): Promise<void> {
-        // TODO: Implementar lógica de inserción asíncrona.
-        throw new Error('Método no implementado');
-    }
+    public async registrarSancion( alumnoId: string,profesorId: string,tipo: TipoSancion,descripcion: string): Promise<void> {
+    // Simulamos un retraso de red de 500 ms
+        await new Promise<void>((resolve) => {
+        setTimeout(resolve, 500);
+        });
 
+        // Generamos un identificador único
+         const id = crypto.randomUUID();
+        // Obteemos la fecha actual en formato YYYY-MM-DD
+        const fecha = new Date().toISOString().split('T')[0];
+        // Creamos el registor de sanción
+        const sancion: Sancion = {
+            id,
+            alumnoId,
+            profesorId,
+            fecha,
+            tipo,
+            descripcion
+         };
+        // Guardamos la sanción en LocalStorage
+        this.sancionesStorage.add(sancion);
+    }
     /**
      * VERIFICACIÓN CRÍTICA: Comprueba si un profesor ya tiene una clase asignada en el mismo día y hora.
      * Devuelve true si hay conflicto (el profesor está duplicado) o false si está libre.
